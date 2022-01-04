@@ -6,7 +6,8 @@ const provider = getEthersBatchProvider();
 
 const APPROVAL_EVENT_SIGNATURE = 'event Approval(address indexed owner, address indexed spender, uint256 value)';
 
-// keep track of addresses that are likely centralized exchanges to skip their transactions when they occur
+// keep track of addresses that are likely centralized exchanges to skip their transactions when
+// they occur
 let blacklist = [];
 
 // track EOAs across transactions and blocks, accumulating a count over time
@@ -18,9 +19,7 @@ const approvalThreshold = 10;
 // set a transaction count threshold high enough to filter out likely centralized exchange EOAs
 const nonceThreshold = 200;
 
-/*
 const handleTransaction = async (txEvent) => {
-
   // initialize the array that will hold the findings for this transaction
   const findings = [];
 
@@ -28,7 +27,6 @@ const handleTransaction = async (txEvent) => {
   const approvalLogs = txEvent.filterLog([APPROVAL_EVENT_SIGNATURE]);
 
   const promises = approvalLogs.map(async (log) => {
-
     const { args: { owner, spender } } = log;
 
     // check the blacklist for the addresses that are likely centralized exchanges
@@ -57,8 +55,8 @@ const handleTransaction = async (txEvent) => {
     if (!suspiciousApprovals[spender]) {
       const nonce = await provider.getTransactionCount(spender, txEvent.blockNumber);
       if (nonce >= nonceThreshold) {
-        // if the address has performed more transactions than the threshold, add the address to the blacklist
-        // as a likely centralized exchange EOA
+        // if the address has performed more transactions than the threshold, add the address to the
+        // blacklist as a likely centralized exchange EOA
         blacklist.push(spender);
         return {};
       }
@@ -93,6 +91,9 @@ const handleTransaction = async (txEvent) => {
   // check the accumulated history of approvals
   Object.entries(suspiciousApprovals).forEach(([spender, approvals]) => {
     if (approvals.length > approvalThreshold) {
+      const owners = approvals.map((entry) => entry.owner).join();
+      const tokens = approvals.map((entry) => entry.tokenAddress).join();
+
       // create finding
       findings.push(
         Finding.fromObject({
@@ -101,6 +102,10 @@ const handleTransaction = async (txEvent) => {
           alertId: 'AE-SUSPICIOUS-APPROVALS',
           severity: FindingSeverity.Medium,
           type: FindingType.Suspicious,
+          metadata: {
+            owners,
+            tokens,
+          },
         }),
       );
     }
@@ -108,8 +113,11 @@ const handleTransaction = async (txEvent) => {
 
   return findings;
 };
-*/
 
+/*
+// this code can be used to process a large number of blocks in a relatively short amount of time
+// if this code is not used, processing one block at a time will take an interminable amount of time
+// the code below will go through approximately 6 hours worth of blocks
 const iface = new ethers.utils.Interface([APPROVAL_EVENT_SIGNATURE]);
 
 let blockFetchStart = 13650638;
@@ -271,8 +279,9 @@ const handleBlock = async (blockEvent) => {
 
   return findings;
 }
+*/
 
 module.exports = {
-  // handleTransaction,
-  handleBlock,
+  handleTransaction,
+  // handleBlock,
 };
