@@ -89,6 +89,7 @@ const handleTransaction = async (txEvent) => {
   });
 
   // check the accumulated history of approvals
+  const entriesToRemove = [];
   Object.entries(suspiciousApprovals).forEach(([spender, approvals]) => {
     if (approvals.length > approvalThreshold) {
       const owners = approvals.map((entry) => entry.owner).join();
@@ -108,8 +109,13 @@ const handleTransaction = async (txEvent) => {
           },
         }),
       );
+
+      entriesToRemove.push(spender);
     }
   });
+
+  // remove entries for which findings were reported
+  entriesToRemove.forEach((spender) => delete suspiciousApprovals[spender]);
 
   return findings;
 };
