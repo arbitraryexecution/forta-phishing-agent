@@ -11,7 +11,7 @@ This agent detects when many Approval events occur from Externally Owned Account
 ## Alerts
 
 - AE-SUSPICIOUS-APPROVALS
-  - Fired when more than 15 Approval events occur from EOAs to a common EOA 
+  - Fired when more than 10 Approval events occur from EOAs to a common EOA 
   - Severity is always set to "medium"
   - Type is always set to "suspicious"
   - Metadata includes owner addresses and the token addresses that they approved to the common EOA
