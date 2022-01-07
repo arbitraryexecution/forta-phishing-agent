@@ -1,5 +1,5 @@
 {
-  "name": "forta-suspicious-approvals",
+  "name": "forta-ae-suspicious-approvals",
   "version": "0.0.1",
   "description": "Forta Suspicious Approvals Agent",
   "scripts": {
@@ -20,6 +20,7 @@
   "dependencies": {
     "forta-agent": "^0.0.33"
   },
+  "repository": "https://github.com/arbitraryexecution/forta-phishing-agent",
   "devDependencies": {
     "eslint": "^8.5.0",
     "eslint-config-airbnb-base": "^15.0.0",

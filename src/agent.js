@@ -14,7 +14,7 @@ let blacklist = [];
 const suspiciousApprovals = {};
 
 // set a threshold for how many transactions to any EOA should be flagged as anomalous
-const approvalThreshold = 10;
+const approvalThreshold = 15;
 
 // set a transaction count threshold high enough to filter out likely centralized exchange EOAs
 const nonceThreshold = 200;
